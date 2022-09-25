@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import BlueLinky from "bluelinky";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+  //@ts-ignore
   const credentials = JSON.parse(process.env.BLUELINK_CREDENTIALS);
   const { id } = req.query;
   //@ts-ignore
@@ -15,7 +16,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     client.on("ready", async () => {
       const vehicle = await client.getVehicle(car.vim);
+      //@ts-ignore
       const odometer = await vehicle.odometer();
+      //@ts-ignore
       resolve(odometer.value);
     });
 
