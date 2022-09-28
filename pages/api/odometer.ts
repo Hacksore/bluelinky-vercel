@@ -2,22 +2,17 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import BlueLinky from "bluelinky";
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   //@ts-ignore
   const credentials = JSON.parse(process.env.BLUELINK_CREDENTIALS);
-  const { id } = req.query;
-  //@ts-ignore
-  const car = credentials[id];
-  if (!id || !car) {
-    return res.status(500).json("Wrong id param!");
-  }
-  const myPromise = new Promise((resolve, reject) => {
-    const client = new BlueLinky(car.cred);
 
-    client.on("ready", async () => {
-      const vehicle = await client.getVehicle(car.vim);
-      //@ts-ignore
-      const odometer = await vehicle.odometer();
+  const myPromise = new Promise((resolve, reject) => {
+    const client = new BlueLinky(credentials);
+
+    client.on("ready", async (v) => {
+      const odometer = await v[0].odometer();
+      
       //@ts-ignore
       resolve(odometer.value);
     });
